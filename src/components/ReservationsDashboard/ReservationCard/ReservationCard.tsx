@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Reservation } from '../../../types/reservation';
 import { formatDate } from '../../../utils/dateFormatters';
 import './ReservationCard.css';
@@ -11,6 +11,12 @@ interface ReservationCardProps {
 
 const ReservationCard: React.FC<ReservationCardProps> = ({ reservation, statusColor }) => {
 
+  const dropdownRef = useRef<HTMLUListElement>(null);
+
+  function toggleDropdown() {
+    dropdownRef.current?.classList.toggle('active');
+  }
+
   return (
     <div className="reservation-card">
       <div className="card-status-indicator" style={{ backgroundColor: statusColor }}></div>
@@ -18,10 +24,13 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ reservation, statusCo
         <div className="card-header">
           <h3 className="guest-name">{reservation.guestName}</h3>
           <div className="action-button">
-            <Link to={`/edit/${reservation.id}`}>Edytuj</Link>
-            <button className="btn-action">
+            <button className="btn-action" onClick={toggleDropdown}>
               ⋮
             </button>
+            <ul className="dropdown" ref={dropdownRef}>
+              <li><Link to={`/edit/${reservation.id}`}>Edytuj</Link></li>
+              <li><Link to={`/edit/${reservation.id}`}>Usuń</Link></li>
+            </ul>
           </div>
         </div>
         
